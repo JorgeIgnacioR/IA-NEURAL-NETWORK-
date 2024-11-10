@@ -64,6 +64,25 @@ class NeuralNetwork:
             json.dump(model_data,f)
         print(f"model saved in {filename}")
 
+    def load(self,filename="model.json"):
+        with open (filename,"r")as f:
+            model_data=json.load(f)
+
+        self.layers=[]
+
+        for layer_data in model_data["layers"]:
+            num_neurons=layer_data["num_neuron"]
+            input_size=layer_data["input_size"]
+
+            new_layer=Layer(num_neurons,input_size)
+
+            new_layer.from_dict(layer_data["neurons"])
+
+            self.layers.append(new_layer)
+
+        print(f"Model loaded from {filename}")
+
+
 
 
 if __name__=="__main__":
@@ -74,15 +93,30 @@ if __name__=="__main__":
 
     nn=NeuralNetwork()
 
-    nn.add_layer(num_neuron=3,input_size=3)
-    nn.add_layer(num_neuron=3,input_size=3)
-    nn.add_layer(num_neuron=1,input_size=3)
+    #nn.add_layer(num_neuron=3,input_size=3)
+    #nn.add_layer(num_neuron=3,input_size=3)
+    #nn.add_layer(num_neuron=1,input_size=3)
 
-    nn.train(X,Y, epochs=10000,learning_rate=0.1)
+    #nn.train(X,Y, epochs=10000,learning_rate=0.1)
 
+    #nn.save("model1.json")
 
-    nn.save("model1.json")
+    nn.load("model1.json")
 
     predictions=nn.predict(X)
     print(f"predictions: {predictions}")
 
+
+
+import matplotlib.pyplot as plt
+
+
+Y = np.array([0.3, 0.6, 0.9])
+
+plt.plot(Y, label='Valores Reales')
+plt.plot(predictions, label='Predicciones')
+plt.xlabel('Índice')
+plt.ylabel('Valor')
+plt.legend()
+plt.title('Comparación de Valores Reales y Predicciones')
+plt.show()
