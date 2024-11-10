@@ -33,6 +33,26 @@ class Neuron:
         self.weight -=self.dweight*learning_rate
         self.bias=learning_rate*self.dbias
         return d_input
+    
+
+    def to_dict(self):
+        return{
+            "weights":self.weight.tolist(),
+            "bias":self.bias
+        }
+
+    def from_dict(self,data):
+        self.weight=np.array(data["weights"])
+        self.bias=data["bias"]
+
+
+
+
+
+
+
+
+
 
 
 

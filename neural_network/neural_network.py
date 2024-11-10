@@ -1,6 +1,8 @@
 import numpy as np
+import json
 import sys
 sys.path.append('/Users/jorgeignacioridella/Desktop/PROGRAMACION/Python/Neural-network/layer')
+
 
 from layer import Layer
 
@@ -44,6 +46,24 @@ class NeuralNetwork:
             predictions.append(self.forward(X[i]))
         return np.array(predictions)
     
+    def save(self,filename="model.json"):
+        model_data={
+            "layers":[]
+        }
+        for layer in self.layers:
+            layer_data={
+                "num_neuron": len(layer.neurons),
+                "input_size":len(layer.neurons[0].weight)if layer.neurons else 0,
+                "neurons":layer.to_dict()
+
+            }
+
+            model_data["layers"].append(layer_data)
+
+        with open(filename,"w") as f:
+            json.dump(model_data,f)
+        print(f"model saved in {filename}")
+
 
 
 if __name__=="__main__":
@@ -58,5 +78,11 @@ if __name__=="__main__":
     nn.add_layer(num_neuron=3,input_size=3)
     nn.add_layer(num_neuron=1,input_size=3)
 
-    nn.train(X,Y, epochs=1000,learning_rate=0.1)
+    nn.train(X,Y, epochs=10000,learning_rate=0.1)
+
+
+    nn.save("model1.json")
+
+    predictions=nn.predict(X)
+    print(f"predictions: {predictions}")
 
